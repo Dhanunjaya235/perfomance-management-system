@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Employee } from '../../employee.interface';
+import { SearchedEmpService } from '../../services/searched-emp.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[app-employee-row]',
@@ -13,6 +15,19 @@ export class EmployeeRowComponent {
   @Input() level: number = 0;
 
   isExpanded: boolean = false;
+   private subscription!: Subscription;
+
+  constructor(private treeService: SearchedEmpService) {}
+
+   ngOnInit() {
+    this.subscription = this.treeService.expandPath$.subscribe(path => {
+      if (path.includes(this.employee.id)) {
+        this.isExpanded = true;
+      } else {
+        this.isExpanded = false;
+      }
+    });
+  }
 
   toggleExpand(): void {
     this.isExpanded = !this.isExpanded;
@@ -24,5 +39,8 @@ export class EmployeeRowComponent {
       count += this.getSubordinatesCount(sub);
     });
     return count;
+  }
+   ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
