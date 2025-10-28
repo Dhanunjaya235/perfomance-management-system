@@ -1,0 +1,44 @@
+<!-- <tr class="hover:bg-gray-50 transition-colors duration-150" [class.bg-gray-50]="level % 2 === 1"> -->
+<!-- Main row -->
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" [style.paddingLeft.px]="24 + (level * 32)">
+  <div class="flex flex-row items-center">
+    <button
+      *ngIf="employee.subordinates.length > 0"
+      (click)="toggleExpand()"
+      class="mr-2 focus:outline-none hover:bg-gray-200 rounded p-1 transition-colors duration-150"
+      [attr.aria-expanded]="isExpanded"
+      [attr.aria-label]="isExpanded ? 'Collapse subordinates' : 'Expand subordinates'">
+      <svg
+        class="w-4 h-4 text-gray-600 transform transition-transform duration-200"
+        [class.rotate-90]="isExpanded"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
+    <span *ngIf="employee.subordinates.length === 0" class="mr-2 w-6"></span>
+    <span class="font-medium font-bold text-[#188DC9]">{{ employee.name }}</span>
+  </div>
+</td>
+
+<td class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+  {{ employee.designation }}
+</td>
+
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 text-center">
+  {{ getSubordinatesCount(employee) }}
+</td>
+
+<!-- </tr> -->
+
+<!-- <div> -->
+<!-- <ng-container *ngIf="isExpanded && employee.subordinates.length > 0">
+  <ng-container *ngFor="let subordinate of employee.subordinates">
+    <tr app-employee-row
+      [employee]="subordinate"
+      [level]="level + 1">
+  </tr>
+  </ng-container>
+</ng-container> -->
+<!-- </div> -->
