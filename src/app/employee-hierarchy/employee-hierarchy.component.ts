@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Employee } from '../employee.interface';
 
 @Component({
   selector: 'app-employee-hierarchy',
@@ -67,4 +68,27 @@ export class EmployeeHierarchyComponent implements OnInit {
     if (!emp.subordinates) return 0;
     return emp.subordinates.length + emp.subordinates.reduce((acc: number, sub: any) => acc + this.getSubordinatesCount(sub), 0);
   }
+
+ expandAllRows(empId: number): void {
+  this.expandParents(this.employees, empId);
+}
+
+private expandParents(employees: Employee[], empId: number): boolean {
+  for (const emp of employees) {
+    // if this is the target employee
+    if (emp.id === empId) {
+      return true;
+    }
+
+    // if target exists in this employee's subordinates
+    if (this.expandParents(emp.subordinates, empId)) {
+      // mark this employee expanded because one of its children matched
+      emp.isExpanded = true;
+      return true;
+    }
+  }
+
+  // not found in this branch
+  return false;
+}
 }

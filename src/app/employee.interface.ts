@@ -4,4 +4,5 @@ export interface Employee {
   designation: string;
   reportingManager:string;
   subordinates: Employee[];
+  isExpanded: boolean;
 }
