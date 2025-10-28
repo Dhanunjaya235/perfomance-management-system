@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gray-100 py-8 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-7xl mx-auto">
+  <div class="max-w-90vw mx-auto">
     <div class="mb-6">
       <h1 class="text-3xl font-bold text-gray-900">Employee Hierarchy</h1>
       <p class="mt-2 text-sm text-gray-600">View and manage your organizational structure</p>
@@ -9,49 +9,60 @@
     type="text"
     [(ngModel)]="searchedEmp"
     (input)="displaySearchedEmp()"
-    placeholder="Search employees..."
+    placeholder="Select Employee"
     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
   />
 
   <ul
     *ngIf="filteredEmployees.length > 0 && searchedEmp"
-    class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-md max-h-48 overflow-auto"
+    class="absolute z-[100000] w-full bg-white border border-gray-300 rounded-md shadow-md max-h-48 overflow-auto"
   >
     <li
       *ngFor="let emp of filteredEmployees"
       (click)="selectEmployee(emp)"
       class="px-4 py-2 hover:bg-blue-100 cursor-pointer"
     >
-      {{ emp.name }} <span class="text-gray-500 text-sm">({{ emp.designation }})</span>
+      {{ emp.name }}
     </li>
   </ul>
 </div>
 
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee Name</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Designation</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Subordinates</th>
-            </tr>
-          </thead>
+  <div class="overflow-x-auto">
+    <div class="max-h-[75vh] overflow-y-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50 sticky top-0 z-1">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+              Employee Name
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+              Designation
+            </th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">
+              Total Subordinates
+            </th>
+          </tr>
+        </thead>
 
-          <tbody class="bg-white divide-y divide-gray-200">
-            <ng-container *ngFor="let employee of employees">
-              <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: employee, level: 0 }"></ng-container>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <ng-container *ngFor="let employee of employees">
+            <ng-container *ngTemplateOutlet="rowTemplate; context: { $implicit: employee, level: 0 }"></ng-container>
+          </ng-container>
+        </tbody>
+      </table>
     </div>
+  </div>
+</div>
+
   </div>
 </div>
 
 <!-- Recursive Template -->
 <ng-template #rowTemplate let-employee let-level="level">
-  <tr class="hover:bg-gray-50 transition-colors duration-150">
+  <tr #rowRef class="transition-colors duration-150" [ngClass]="{
+    'bg-yellow-100': searchedEmp && employee.name.toLowerCase()===(searchedEmp.toLowerCase())
+  }">
     <td class="px-6 py-4 text-sm text-gray-900" [style.paddingLeft.px]="24 + (level * 32)">
       <div class="flex items-center">
         <button

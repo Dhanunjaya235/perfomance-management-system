@@ -1,26 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SearchedEmpService } from '../services/searched-emp.service';
 import { EmployeeRowComponent } from './employee-row/employee-row.component';
 import { Employee } from '../employee.interface';
-
+import { buildEmployeeHierarchy } from '../utils';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-employee-hierarchy',
   templateUrl: './employee-hierarchy.component.html',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule]
 })
 export class EmployeeHierarchyComponent implements OnInit {
-  employees: any[] = [];
+  employees: Employee[] = [];
   searchedEmp:string='';
   filteredEmployees: any[] = [];
+  @ViewChildren('rowRef') rowElements!: QueryList<ElementRef<HTMLTableRowElement>>;
 
-  constructor(private searchedEmpService: SearchedEmpService) { }
+  constructor() {}
 
-
-  ngOnInit() {
-    this.employees = [
-      {
+  ngOnInit(): void {
+    this.employees =  [{
         id: 1,
         name: 'John Doe',
         designation: 'CEO',
@@ -64,8 +64,32 @@ export class EmployeeHierarchyComponent implements OnInit {
             subordinates: []
           }
         ]
-      }
-    ];
+      }];
+  }
+   ngAfterViewInit() {
+    // Watch when rows change (e.g., expand/collapse updates DOM)
+    this.rowElements.changes.subscribe(() => {
+      this.scrollToMatchedRow();
+    });
+  }
+
+  ngOnChanges() {
+    this.scrollToMatchedRow();
+  }
+
+  scrollToMatchedRow(): void {
+    if (!this.searchedEmp) return;
+
+    const match = this.rowElements.find(ref =>
+      ref.nativeElement.innerText.toLowerCase().includes(this.searchedEmp.toLowerCase())
+    );
+
+    if (match) {
+      match.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
   }
   // Flatten tree into a single list
   getAllEmployees(list: any[]): any[] {
@@ -91,6 +115,7 @@ export class EmployeeHierarchyComponent implements OnInit {
     this.searchedEmp = emp.name;
     this.filteredEmployees = [];
     this.expandAllRows(emp.id);
+    this.scrollToMatchedRow();
   }
 
   toggleExpand(employee: any) {

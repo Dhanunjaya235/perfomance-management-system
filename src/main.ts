@@ -3,7 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, RouterOutlet } from '@angular/router';
 import { routes } from './app/app.routes';
 import { SearchedEmpService } from './app/services/searched-emp.service';
-
+import { provideHttpClient, withFetch } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -15,6 +15,7 @@ export class App {}
 
 bootstrapApplication(App, {
   providers: [
-    provideRouter(routes)
+    provideRouter(routes),
+    provideHttpClient(withFetch())
   ]
 });
