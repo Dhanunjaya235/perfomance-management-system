@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SearchedEmpService } from '../services/searched-emp.service';
 import { EmployeeRowComponent } from './employee-row/employee-row.component';
+import { Employee } from '../employee.interface';
 
 @Component({
   selector: 'app-employee-hierarchy',
@@ -89,11 +90,7 @@ export class EmployeeHierarchyComponent implements OnInit {
   selectEmployee(emp: any) {
     this.searchedEmp = emp.name;
     this.filteredEmployees = [];
-    const path = this.findPathToEmployee(this.employees, emp.id);
-    
-    if (path) {
-      this.searchedEmpService.setExpandPath(path);
-    }
+    this.expandAllRows(emp.id);
   }
 
   toggleExpand(employee: any) {
@@ -118,4 +115,27 @@ export class EmployeeHierarchyComponent implements OnInit {
     return null;
   }
 
+
+ expandAllRows(empId: number): void {
+  this.expandParents(this.employees, empId);
+}
+
+private expandParents(employees: Employee[], empId: number): boolean {
+  for (const emp of employees) {
+    // if this is the target employee
+    if (emp.id === empId) {
+      return true;
+    }
+
+    // if target exists in this employee's subordinates
+    if (this.expandParents(emp.subordinates, empId)) {
+      // mark this employee expanded because one of its children matched
+      emp.isExpanded = true;
+      return true;
+    }
+  }
+
+  // not found in this branch
+  return false;
+}
 }

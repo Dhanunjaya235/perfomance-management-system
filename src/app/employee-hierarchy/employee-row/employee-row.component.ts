@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Employee } from '../../employee.interface';
 import { SearchedEmpService } from '../../services/searched-emp.service';
@@ -33,6 +33,10 @@ export class EmployeeRowComponent {
     this.isExpanded = !this.isExpanded;
   }
 
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('Employee input changed:', changes['employee']);
+  }
   getSubordinatesCount(employee: Employee): number {
     let count = employee.subordinates.length;
     employee.subordinates.forEach(sub => {
