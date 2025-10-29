@@ -6,10 +6,12 @@ import { EmployeeRowComponent } from './employee-row/employee-row.component';
 import { Employee } from '../employee.interface';
 import { buildEmployeeHierarchy } from '../utils';
 import { HttpClient } from '@angular/common/http';
+import { PmsSearchDropdown } from '../common/pms-search-dropdown/pms-search-dropdown';
 @Component({
   selector: 'app-employee-hierarchy',
   templateUrl: './employee-hierarchy.component.html',
-  imports: [CommonModule,FormsModule]
+  imports: [CommonModule,FormsModule,PmsSearchDropdown],
+  standalone: true
 })
 export class EmployeeHierarchyComponent implements OnInit {
   employees: Employee[] = [];
@@ -111,15 +113,20 @@ export class EmployeeHierarchyComponent implements OnInit {
     );
   }
 
-  selectEmployee(emp: any) {
+  onEmployeeSelected(emp: any) {
     this.searchedEmp = emp.name;
     this.filteredEmployees = [];
     this.expandAllRows(emp.id);
+    console.log('Selected Employee:', emp);
     this.scrollToMatchedRow();
   }
 
   toggleExpand(employee: any) {
     employee.isExpanded = !employee.isExpanded;
+  }
+
+  trackByFn(index: number, item: any): any {
+    return item.id || index;
   }
 
   getSubordinatesCount(emp: any): number {

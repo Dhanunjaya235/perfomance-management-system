@@ -1,0 +1,26 @@
+<div class="flex h-screen">
+  <div [class.w-64]="isOpen" [class.w-16]="!isOpen"
+    class="bg-gray-800 text-white transition-all duration-300 flex flex-col" (mouseenter)="openSidenav()"
+    (mouseleave)="closeSidenav()">
+    <nav class="flex-1">
+  <a
+    [routerLink]="item.route"
+    class="menu-item flex items-center py-3 px-4 hover:bg-gray-700"
+    *ngFor="let item of menuItems;trackBy: trackByFn"
+  >
+    <lucide-angular [img]="item.icon" class="menu-icon"></lucide-angular>
+    <span
+      class="menu-label ml-2"
+      [class.hidden]="!isOpen"
+    >
+      {{ item.label }}
+    </span>
+  </a>
+</nav>
+
+  </div>
+  <div style="width: 100%;">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>

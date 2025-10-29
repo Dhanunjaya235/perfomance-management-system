@@ -1,0 +1,58 @@
+<div class="p-6 bg-white rounded-lg shadow-md">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-semibold text-gray-700">Cycle Management</h2>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+      <thead class="bg-gray-100 text-gray-600 uppercase text-sm">
+        <tr>
+          <th class="py-3 px-4 text-left">Name</th>
+          <th class="py-3 px-4 text-left">Start Date</th>
+          <th class="py-3 px-4 text-left">End Date</th>
+          <th class="py-3 px-4 text-left">Cycle Type</th>
+          <th class="py-3 px-4 text-left">Eligible Employees</th>
+          <th class="py-3 px-4 text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let cycle of cycles; trackBy: trackByFn"
+          class="border-b hover:bg-gray-50"
+        >
+          <td class="py-3 px-4">{{ cycle.name }}</td>
+          <td class="py-3 px-4">{{ cycle.startDate | date }}</td>
+          <td class="py-3 px-4">{{ cycle.endDate | date }}</td>
+          <td class="py-3 px-4">{{ cycle.cycleType }}</td>
+          <td class="py-3 px-4">
+            <div class="truncate max-w-[150px]" title="{{ cycle.employees.join(', ') }}">
+              {{ cycle.employees.join(', ') }}
+            </div>
+          </td>
+          <td class="py-3 px-4 text-center">
+            <button
+              (click)="editCycle(cycle)"
+              class="text-blue-600 hover:text-blue-800 mr-3"
+            >
+                <lucide-angular [img]="editIcon" class="menu-icon"></lucide-angular>
+
+            </button>
+            <button
+              (click)="deleteCycle(cycle)"
+              class="text-red-600 hover:text-red-800"
+            >
+                  <lucide-angular [img]="deleteIcon" class="menu-icon"></lucide-angular>
+
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="cycles.length === 0">
+          <td colspan="6" class="text-center py-4 text-gray-500">
+            No cycles found.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

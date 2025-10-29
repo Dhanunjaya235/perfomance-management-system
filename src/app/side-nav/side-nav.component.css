@@ -1,0 +1,17 @@
+.menu-item {
+  transition: all 0.3s;
+}
+
+.menu-label {
+  transition: opacity 0.3s, width 0.3s;
+}
+
+.menu-label.hidden {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+.menu-label:not(.hidden) {
+  opacity: 1;
+  width: auto;
+}

@@ -1,0 +1,90 @@
+<div class="p-6">
+  <h2 class="text-2xl font-semibold mb-6">Role Configuration</h2>
+
+  <!-- Employee & Role Row -->
+  <div class="flex flex-col md:flex-row gap-6 mb-6">
+    <!-- Employee Search -->
+    <div class="flex-1 relative">
+      <label class="block font-medium mb-1">Employee</label>
+      <app-pms-search-dropdown [list]="employees" [multiSelect]="false" [placeholder]="'Search Employee...'" [searchKey]="'name'"
+        (itemSelected)="onEmployeeSelected($event)"></app-pms-search-dropdown>
+    </div>
+  </div>
+
+  <!-- Role Multi-Select Dropdown with Chips -->
+  <div class="flex-1 relative">
+    <label class="block font-medium mb-1">Select Roles</label>
+
+    <!-- Dropdown trigger with chips inside -->
+    <div (click)="showRoleDropdown = !showRoleDropdown"
+      class="border rounded px-3 py-2 w-full min-h-[42px] cursor-pointer focus:ring-2 focus:ring-blue-500 flex flex-wrap gap-2 items-center">
+      <!-- Selected roles as chips -->
+      <span *ngFor="let role of selectedRoles; trackBy: trackByFn"
+        class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center gap-1"
+        (click)="$event.stopPropagation()">
+        {{ role }}
+        <button (click)="removeRole(role)" class="hover:bg-blue-200 rounded-full p-0.5 ml-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </span>
+
+      <!-- Placeholder when no roles selected -->
+      <span *ngIf="selectedRoles.length === 0" class="text-gray-400">Select roles...</span>
+
+      <!-- Dropdown icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-auto" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+
+    <!-- Dropdown list -->
+    <div *ngIf="showRoleDropdown"
+      class="absolute z-10 border rounded mt-1 bg-white shadow w-full max-h-40 overflow-y-auto">
+      <div *ngFor="let role of availableRoles;trackBy: trackByFn" class="px-3 py-2 flex items-center hover:bg-gray-100 cursor-pointer"
+        (click)="$event.stopPropagation(); toggleRole(role)">
+        <input type="checkbox" [checked]="isRoleSelected(role)" class="mr-2 cursor-pointer" />
+        {{ role }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Button -->
+  <div class="flex items-end">
+    <button (click)="addConfiguration()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+      Add Configuration
+    </button>
+  </div>
+</div>
+
+<!-- Table -->
+<table class="w-full border-collapse border border-gray-300">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="border p-2 text-left w-1/3">Employee</th>
+      <th class="border p-2 text-left w-1/3">Assigned Roles</th>
+      <th class="border p-2 text-center w-1/3">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let config of configurations; let i = index;; trackBy: trackByFn" class="border-t">
+      <td class="border p-2">{{ config.employee.name }}</td>
+      <td class="border p-2">
+        <span *ngFor="let role of config.roles"
+          class="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2 inline-block mb-1">
+          {{ role }}
+        </span>
+      </td>
+      <td class="border p-2 text-center">
+        <button (click)="editConfig(config)" class="text-yellow-600 hover:text-yellow-800 mr-3">
+          ✏️
+        </button>
+        <button (click)="removeConfig(i)" class="text-red-600 hover:text-red-800">
+          🗑️
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
