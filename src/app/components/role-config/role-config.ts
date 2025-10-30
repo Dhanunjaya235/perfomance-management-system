@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PmsSearchDropdown } from '../../common/pms-search-dropdown/pms-search-dropdown';
+import { PmsOutsideClick } from '../../common/pms-outside-click';
+import { PmsIconsService } from '../../services/pms-icons.service';
+import { LucideAngularModule } from 'lucide-angular';
 
 interface Employee {
   id: number;
@@ -16,7 +19,8 @@ interface Configuration {
 @Component({
   selector: 'app-role-configuration',
   standalone: true,
-  imports: [CommonModule, FormsModule,PmsSearchDropdown],
+  imports: [CommonModule, FormsModule,PmsSearchDropdown,PmsOutsideClick,LucideAngularModule],
+  providers:[PmsIconsService],
   templateUrl: './role-config.html'
 })
 export class RoleConfigurationComponent {
@@ -27,6 +31,10 @@ export class RoleConfigurationComponent {
   ];
 
   availableRoles = ['Admin', 'Manager', 'Editor', 'Viewer'];
+  constructor(private iconsService:PmsIconsService){}
+  readonly editIcon=this.iconsService.editIcon
+  readonly deleteIcon=this.iconsService.deleteIcon
+
 
   searchText = '';
   filteredEmployees: Employee[] = [];
@@ -35,8 +43,17 @@ export class RoleConfigurationComponent {
   // roles
   selectedRoles: string[] = [];
   showRoleDropdown = false;
-
   configurations: Configuration[] = [];
+
+
+toggleRoleDropdown(event: MouseEvent) {
+  event.stopPropagation();
+  this.showRoleDropdown = !this.showRoleDropdown;
+}
+
+closeRoleDropdown() {
+  this.showRoleDropdown = false;
+}
 
   // 🔍 Filter employees
   filterEmployees() {

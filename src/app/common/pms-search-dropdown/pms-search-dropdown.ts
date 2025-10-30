@@ -13,7 +13,7 @@ export class PmsSearchDropdown {
   @Input() list: any[] = [];
   @Input() placeholder: string = '';
   @Input() searchKey: string = '';
-  @Input() multiSelect: boolean = false; // ✅ Control multi-select
+  @Input() multiSelect: boolean = false;
   @Output() itemSelected = new EventEmitter<any>();
   @Output() itemsSelected = new EventEmitter<any[]>(); // ✅ Emit multiple
 

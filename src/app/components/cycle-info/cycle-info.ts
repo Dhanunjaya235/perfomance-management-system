@@ -1,16 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { LucideAngularModule,Edit,Delete} from 'lucide-angular';
+import { PmsDatePipe } from '../../pipes/pms-date-pipe';
+import { PmsIconsService } from '../../services/pms-icons.service';
 
 @Component({
   selector: 'app-cycle-info',
-  imports: [CommonModule,LucideAngularModule],
+  imports: [CommonModule,LucideAngularModule,PmsDatePipe],
+  providers:[],
   templateUrl: './cycle-info.html',
   styleUrl: './cycle-info.css'
 })
 export class CycleInfo {
-  readonly editIcon=Edit;
-  readonly deleteIcon=Delete;
+
+  constructor(private iconService:PmsIconsService){}
+  readonly editIcon=this.iconService.editIcon;
+  readonly deleteIcon=this.iconService.deleteIcon;
   @Output() emitEditCycleEvent=new EventEmitter<any>();
    cycles = [
     {
@@ -36,6 +41,7 @@ export class CycleInfo {
   }
 
   editCycle(cycle: any) {
+    console.log(cycle)
     
     this.emitEditCycleEvent.emit(cycle);
   }

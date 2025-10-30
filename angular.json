@@ -38,9 +38,11 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          
           "configurations": {
             "development": {
-              "buildTarget": "demo:build:development"
+              "buildTarget": "demo:build:development",
+              "port":5252
             },
             "production": {
               "buildTarget": "demo:build:production"

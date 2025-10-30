@@ -1,8 +1,4 @@
-<div class="p-6 bg-white rounded-lg shadow-md">
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-semibold text-gray-700">Cycle Management</h2>
-  </div>
-
+<div class="p-2 bg-white rounded-lg shadow-md">
   <div class="overflow-x-auto">
     <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
       <thead class="bg-gray-100 text-gray-600 uppercase text-sm">
@@ -21,8 +17,8 @@
           class="border-b hover:bg-gray-50"
         >
           <td class="py-3 px-4">{{ cycle.name }}</td>
-          <td class="py-3 px-4">{{ cycle.startDate | date }}</td>
-          <td class="py-3 px-4">{{ cycle.endDate | date }}</td>
+          <td class="py-3 px-4">{{ cycle.startDate.toString() | pmsDatePipe }}</td>
+          <td class="py-3 px-4">{{ cycle.endDate.toString() | pmsDatePipe }}</td>
           <td class="py-3 px-4">{{ cycle.cycleType }}</td>
           <td class="py-3 px-4">
             <div class="truncate max-w-[150px]" title="{{ cycle.employees.join(', ') }}">
