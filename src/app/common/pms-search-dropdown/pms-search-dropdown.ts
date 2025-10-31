@@ -14,14 +14,16 @@ export class PmsSearchDropdown {
   @Input() placeholder: string = '';
   @Input() searchKey: string = '';
   @Input() multiSelect: boolean = false;
+
   @Output() itemSelected = new EventEmitter<any>();
-  @Output() itemsSelected = new EventEmitter<any[]>(); // ✅ Emit multiple
+  @Output() itemsSelected = new EventEmitter<any[]>(); // multiple selection
 
   searchedValue = '';
   filteredList: any[] = [];
   selectedItems: any[] = [];
+  dropdownOpen = false;
 
-  // ✅ Recursively flatten hierarchical data
+  /** Recursively flatten hierarchical data */
   private flattenEmployees(list: any[]): any[] {
     const result: any[] = [];
     list.forEach(emp => {
@@ -33,20 +35,35 @@ export class PmsSearchDropdown {
     return result;
   }
 
+  /** 🔹 Open dropdown and load all employees */
+  openDropdown() {
+    this.dropdownOpen = true;
+    const flatList = this.flattenEmployees(this.list);
+    this.filteredList = [...flatList];
+  }
+
+  /** 🔹 Toggle dropdown manually */
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+    if (this.dropdownOpen) this.openDropdown();
+  }
+
+  /** 🔹 Filter based on search */
   displaySearched() {
     const value = this.searchedValue.trim().toLowerCase();
+    const flatList = this.flattenEmployees(this.list);
+
     if (!value) {
-      this.filteredList = [];
+      this.filteredList = [...flatList];
       return;
     }
 
-    const flatList = this.flattenEmployees(this.list);
     this.filteredList = flatList.filter(item =>
       item[this.searchKey]?.toLowerCase().includes(value)
     );
   }
 
-  // ✅ Handle select
+  /** 🔹 Handle item selection */
   selectItem(item: any) {
     if (this.multiSelect) {
       const exists = this.selectedItems.find(i => i.id === item.id);
@@ -58,12 +75,18 @@ export class PmsSearchDropdown {
       this.itemsSelected.emit(this.selectedItems);
     } else {
       this.searchedValue = item[this.searchKey];
-      this.filteredList = [];
+      this.dropdownOpen = false;
       this.itemSelected.emit(item);
     }
   }
 
-  // ✅ "Select All" handler
+  /** 🔹 Remove a selected employee chip */
+  removeItem(item: any) {
+    this.selectedItems = this.selectedItems.filter(i => i.id !== item.id);
+    this.itemsSelected.emit(this.selectedItems);
+  }
+
+  /** 🔹 Select All toggle */
   toggleSelectAll() {
     if (this.allSelected()) {
       this.selectedItems = [];
@@ -73,13 +96,11 @@ export class PmsSearchDropdown {
     this.itemsSelected.emit(this.selectedItems);
   }
 
-  // ✅ Check if all items in the current filtered list are selected
+  /** 🔹 Check if all items are selected */
   allSelected(): boolean {
     return (
       this.filteredList.length > 0 &&
-      this.filteredList.every(f =>
-        this.selectedItems.some(s => s.id === f.id)
-      )
+      this.filteredList.every(f => this.selectedItems.some(s => s.id === f.id))
     );
   }
 
@@ -89,5 +110,9 @@ export class PmsSearchDropdown {
 
   trackByFn(index: number, item: any): any {
     return item.id || index;
+  }
+
+  closeDropdown() {
+    this.dropdownOpen = false;
   }
 }
